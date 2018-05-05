@@ -1,6 +1,7 @@
 # tictactoe
 
-This is the tictactoe project.
+This is the tictactoe project. A running example can be found at
+http://tictactoe.jcodev.eu.
 
 ## Development Mode
 
@@ -27,10 +28,10 @@ The application will now be available at
 [http://localhost:3000](http://localhost:3000).
 
 ### Style Compilation
-To compile [sass](https://github.com/Deraen/sass4clj) sources and then watch for
-changes and recompile until interrupted, run:
+To compile [sass](https://github.com/tuhlmann/lein-sass) sources and then watch
+for changes and recompile until interrupted, run:
 ```
-lein sass4clj auto
+lein sass auto
 ```
 
 ### Optional Development Tools
@@ -49,7 +50,6 @@ and stopped by running:
 ```clojure
 (stop-server)
 ```
-
 
 ## Building for Release
 

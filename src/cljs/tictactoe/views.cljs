@@ -76,7 +76,7 @@
       "Replay"]]))
 
 (defn main-panel []
-  [:div.container.section
+  [:div.container.section.animated.fadeIn
    [about-screen]
    [:nav.navbar.is-light
     [:div.navbar-menu.is-active

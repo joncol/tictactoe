@@ -25,20 +25,20 @@
       [:p "Next to move: " @next-to-move])))
 
 (defn board []
+  [:div (for [row (range 3)]
+          ^{:key [row]}
+          [:div (for [col (range 3)]
+                  ^{:key [row col]}
+                  [cell (+ (* 3 row) col)])])])
+
+(defn main-panel []
   [:div.container.section
    [:div.title "Tic tac toe"]
    [:div.section
     [:div.columns.is-mobile
      [:div.column.is-narrow
-      (for [row (range 3)]
-        ^{:key [row]}
-        [:div (for [col (range 3)]
-                ^{:key [row col]}
-                [cell (+ (* 3 row) col)])])]
+      [board]]
      [:div.column.is-narrow {:style {:width "200px"}} [game-info]]]]
    [:div.button
     {:on-click #(rf/dispatch [::events/initialize-db])}
     "Reset game"]])
-
-(defn main-panel []
-  [board])

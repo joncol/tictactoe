@@ -7,32 +7,38 @@
 
 (defn about-link []
   (let [in-replay (rf/subscribe [::subs/in-replay])]
-    [:a
-     {:href "#/"
-      :disabled @in-replay
-      :on-click #(rf/dispatch [::events/show-about true])} "About"]))
+    [:button#about-button.button
+     {:disabled @in-replay
+      :on-click #(rf/dispatch [::events/show-about true])}
+     "About"]))
 
 (defn about-screen []
   (let [show (rf/subscribe [::subs/show-about])]
     [:div.modal.animated.fadeIn
      {:class (when @show "is-active")}
      [:div.modal-background
-      {:on-click #(rf/dispatch [::events/show-about false])}
-      [:button.modal-close.is-large
-       {:aria-label "close"
-        :on-click #(rf/dispatch [::events/show-about false])}]]
-     [:div.card.has-text-centered {:style {:width "340px"}}
-      [:header.card-header.is-paddingless
-       [:p.card-header-title.is-centered.animated.fadeInLeft "Tic tac toe"]]
-      [:div.card-content
+      {:on-click #(rf/dispatch [::events/show-about false])}]
+     [:div#about-screen.modal-card.has-text-centered.is-rounded
+      [:header.modal-card-head
+       [:p.modal-card-title.is-centered.animated.fadeInLeft "Tic tac toe"]
+       [:button.delete.is-medium
+        {:aria-label "close"
+         :on-click #(rf/dispatch [::events/show-about false])}]
+       ]
+      [:div.modal-card-body
        [:p "Made using ClojureScript "
         [:i.fas.fa-coffee.animated.pulse.anim-forever
          {:aria-hidden true
-          :style {:color "#013243"}}]]
+          :style {:color       "#013243"
+                  :margin-left "3px"}}]]
        [:p "Repository available at "
+        [:i.fab.fa-github
+         {:aria-hidden true
+          :style {:margin-left "3px"}}]
+        [:br]
         [:a {:href "https://github.com/joncol/tictactoe"}
          "https://github.com/joncol/tictactoe"]]]
-      [:footer.card-footer
+      [:footer.modal-card-foot
        "© 2018 Jonas Collberg. No rights reserved."]]]))
 
 (defn cell [index]
@@ -56,7 +62,7 @@
         next-to-move (rf/subscribe [::subs/next-to-move])]
     [:div.card.has-text-left.has-text-centered #_{:style {:height "150px"}}
      [:div.card-content.is-centered
-      "Current move: " @current-move [:br]
+      "Moves: " @current-move [:br]
       (if @winner
         [:span "Game over " [:br] "Winner: " @winner]
         [:span "Next to move: " @next-to-move])]]))
@@ -73,17 +79,19 @@
         winner       (rf/subscribe [::subs/winner])
         in-replay    (rf/subscribe [::subs/in-replay])]
     [:div.buttons
-     [:button.button.is-danger.tooltip
-      {:disabled (zero? @current-move)
+     [:button.button.is-danger.tooltip.is-rounded
+      {:disabled (or (zero? @current-move) @in-replay)
        :data-tooltip (str "Clear game board. Only available when a move has "
                           "been made")
        :on-click #(rf/dispatch [::events/initialize-db])}
-      "Reset"]
-     [:button.button.is-warning.tooltip
+      [:span.icon [:i.fas.fa-redo {:aria-hidden true}]]
+      [:span "Reset"]]
+     [:button.button.is-warning.tooltip.is-rounded
       {:disabled (or (not @winner) @in-replay)
        :data-tooltip "Replay game. Only available when a game is finished"
        :on-click #(rf/dispatch [::events/replay-tick 0])}
-      "Replay"]]))
+      [:span.icon [:i.fas.fa-backward {:aria-hidden true}]]
+      [:span "Replay"]]]))
 
 (defn main-panel []
   [:div.section.animated.fadeIn

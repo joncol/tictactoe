@@ -18,8 +18,18 @@ html, body.body-container {
     justify-content: center;
 }
 
+.modal-card#about-screen {
+    width: 380px;
+    .has-text-centered {
+        .modal-card-foot {
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
 .card {
-    margin-top: 6px;
+    margin-top: 4px;
 }
 
 .card.is-wide {
@@ -44,19 +54,25 @@ html, body.body-container {
     }
 }
 
+$header-background: #f5f6fa;
+
 .card-header {
     padding: 1.75rem 0;
+    background-color: $header-background;
 }
 
 .card-content {
     padding: 3.5rem 0;
 }
 
+$footer-background: $header-background;
+
 .card-footer {
     padding: 1rem 0;
     border: none;
     font-size: .9rem;
     color: lighten(black, 50%);
+    background-color: $footer-background;
 }
 
 @import "../../resources/bulma-0.7.0/bulma";

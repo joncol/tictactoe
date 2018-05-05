@@ -35,7 +35,10 @@
         [:div (for [col (range 3)]
                 ^{:key [row col]}
                 [cell (+ (* 3 row) col)])])]
-     [:div.column.is-narrow {:style {:width "200px"}} [game-info]]]]])
+     [:div.column.is-narrow {:style {:width "200px"}} [game-info]]]]
+   [:div.button
+    {:on-click #(rf/dispatch [::events/initialize-db])}
+    "Reset game"]])
 
 (defn main-panel []
   [board])

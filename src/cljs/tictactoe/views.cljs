@@ -8,7 +8,7 @@
 (defn cell [index]
   (let [board  (rf/subscribe [::subs/board])
         winner (rf/subscribe [::subs/winner])]
-    [:div.button.is-info.title.is-4
+    [:div.button.is-dark.title.is-4
      {:disabled @winner
       :style    {:width  cell-size
                  :height cell-size

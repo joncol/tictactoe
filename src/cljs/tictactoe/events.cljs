@@ -9,9 +9,10 @@
 
 (rf/reg-event-db
   ::make-move
-  (fn [db [_ index]]
+  (fn [{:keys [board] :as db} [_ index]]
     (if-not (get-in db [:board index])
-      (-> db
-          (assoc-in [:board index] (:next-to-move db))
-          (update :next-to-move #(if (= "x" %) "o" "x")))
+      (let [new-board (assoc board index (:next-to-move db))]
+        (-> db
+            (assoc :board new-board)
+            (update :next-to-move #(if (= "x" %) "o" "x"))))
       db)))

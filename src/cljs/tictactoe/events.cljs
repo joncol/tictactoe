@@ -19,12 +19,25 @@
               (update :next-to-move #(if (= "x" %) "o" "x"))))
         db))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
   ::replay-tick
-  (fn [{:keys [board-history] :as db} [_ current-move]]
-    (let [done (= current-move (dec (count board-history)))]
-      (when (not done)
-        (js/setTimeout #(rf/dispatch [::replay-tick (inc current-move)]) 500))
-      (-> db
-          (assoc :current-move current-move)
-          (assoc :in-replay (not done))))))
+  (fn [{:keys [db]} [_ current-move]]
+    (let [{:keys [board-history]} db]
+      (let [done   (= current-move (dec (count board-history)))
+            new-db (-> db
+                       (assoc :current-move current-move)
+                       (assoc :in-replay (not done)))]
+        (into {}
+              (concat
+               [[:db new-db]]
+               (when (not done)
+                 [[::timer-event
+                   [(fn []
+                      (js/setTimeout
+                       #(rf/dispatch [::replay-tick
+                                      (inc current-move)]) 500))]]])))))))
+
+(rf/reg-fx
+  ::timer-event
+  (fn [[action delay]]
+    (action)))

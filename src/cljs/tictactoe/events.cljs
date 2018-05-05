@@ -14,5 +14,6 @@
       (let [new-board (assoc board index (:next-to-move db))]
         (-> db
             (assoc :board new-board)
+            (update :history #(conj % new-board))
             (update :next-to-move #(if (= "x" %) "o" "x"))))
       db)))

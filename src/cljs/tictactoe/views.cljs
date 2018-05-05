@@ -32,13 +32,15 @@
                   [cell (+ (* 3 row) col)])])])
 
 (defn main-panel []
-  [:div.container.section
-   [:div.title "Tic tac toe"]
-   [:div.section
-    [:div.columns.is-mobile
-     [:div.column.is-narrow
-      [board]]
-     [:div.column.is-narrow {:style {:width "200px"}} [game-info]]]]
-   [:div.button
-    {:on-click #(rf/dispatch [::events/initialize-db])}
-    "Reset game"]])
+  (let [history (rf/subscribe [::subs/history])]
+    [:div.container.section
+     [:div.title "Tic tac toe"]
+     [:div.section
+      [:div.columns.is-mobile
+       [:div.column.is-narrow
+        [board]]
+       [:div.column.is-narrow {:style {:width "200px"}} [game-info]]]]
+     [:div.button
+      {:disabled (not (seq @history))
+       :on-click #(rf/dispatch [::events/initialize-db])}
+      "Reset game"]]))

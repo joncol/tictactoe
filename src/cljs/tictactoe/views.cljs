@@ -54,12 +54,12 @@
   (let [current-move (rf/subscribe [::subs/current-move])
         winner       (rf/subscribe [::subs/winner])
         next-to-move (rf/subscribe [::subs/next-to-move])]
-    [:div.card.has-text-left {:style {:width "200px"}}
-     [:div.card-content
-      [:p "Current move: " @current-move]
+    [:div.card.has-text-left.has-text-centered #_{:style {:height "150px"}}
+     [:div.card-content.is-centered
+      "Current move: " @current-move [:br]
       (if @winner
-        [:p "Game over " [:br] "Winner: " @winner]
-        [:p "Next to move: " @next-to-move])]]))
+        [:span "Game over " [:br] "Winner: " @winner]
+        [:span "Next to move: " @next-to-move])]]))
 
 (defn board []
   [:div (for [row (range 3)]
@@ -94,7 +94,7 @@
      [:div.columns.is-mobile
       [:div.column.is-narrow
        [board]]
-      [:div.column.is-narrow {:style {:width "200px"}} [game-info]]]
+      [:div.column.is-narrow {:style {:width "205px"}} [game-info]]]
      [:div.container
       [buttons]]]
     [:footer.card-footer [about-link]]]])

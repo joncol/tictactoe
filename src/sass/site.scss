@@ -18,8 +18,12 @@ html, body.body-container {
     justify-content: center;
 }
 
+.card {
+    margin-top: 6px;
+}
+
 .card.is-wide {
-    width: 400px;
+    width: 420px;
 }
 
 .card.has-text-centered {

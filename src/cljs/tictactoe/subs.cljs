@@ -2,19 +2,36 @@
   (:require [re-frame.core :as rf]))
 
 (rf/reg-sub
-  ::board
-  (fn [db]
-    (:board db)))
-
-(rf/reg-sub
   ::next-to-move
-  (fn [db _]
-    (:next-to-move db)))
+  (fn [_ _]
+    (rf/subscribe [::current-move]))
+  (fn [current-move _]
+    (if (zero? (mod current-move 2))
+      "x"
+      "o")))
 
 (rf/reg-sub
-  ::history
+  ::current-move
   (fn [db _]
-    (:history db)))
+    (:current-move db)))
+
+(rf/reg-sub
+  ::board-history
+  (fn [db _]
+    (:board-history db)))
+
+(rf/reg-sub
+  ::in-replay
+  (fn [db _]
+    (:in-replay db)))
+
+(rf/reg-sub
+  ::board
+  (fn [_ _]
+    [(rf/subscribe [::board-history])
+     (rf/subscribe [::current-move])])
+  (fn [[board-history current-move] _]
+    (get board-history current-move)))
 
 (defn winner [board]
   (let [lines [[0 1 2] [3 4 5] [6 7 8]

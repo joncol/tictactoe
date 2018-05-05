@@ -6,23 +6,27 @@
 (def cell-size "50px")
 
 (defn cell [index]
-  (let [board  (rf/subscribe [::subs/board])
-        winner (rf/subscribe [::subs/winner])]
+  (let [board     (rf/subscribe [::subs/board])
+        winner    (rf/subscribe [::subs/winner])
+        in-replay (rf/subscribe [::subs/in-replay])]
     [:div.button.is-dark.title.is-4
-     {:disabled @winner
+     {:disabled (or @winner @in-replay)
       :style    {:width  cell-size
                  :height cell-size
                  :margin "2px"}
-      :on-click #(when-not @winner
+      :on-click #(when (and (not @winner) (not @in-replay))
                    (rf/dispatch [::events/make-move index]))}
      (get @board index)]))
 
 (defn game-info []
-  (let [winner       (rf/subscribe [::subs/winner])
+  (let [current-move (rf/subscribe [::subs/current-move])
+        winner       (rf/subscribe [::subs/winner])
         next-to-move (rf/subscribe [::subs/next-to-move])]
-    (if @winner
-      [:p "Game over (" @winner " won)"]
-      [:p "Next to move: " @next-to-move])))
+    [:div
+     [:p "Current move: " @current-move]
+     (if @winner
+       [:p "Game over (" @winner " won)"]
+       [:p "Next to move: " @next-to-move])]))
 
 (defn board []
   [:div (for [row (range 3)]
@@ -32,16 +36,17 @@
                   [cell (+ (* 3 row) col)])])])
 
 (defn buttons []
-  (let [history (rf/subscribe [::subs/history])
-        winner  (rf/subscribe [::subs/winner])]
+  (let [current-move (rf/subscribe [::subs/current-move])
+        winner       (rf/subscribe [::subs/winner])
+        in-replay    (rf/subscribe [::subs/in-replay])]
     [:div.buttons
      [:button.button.is-danger
-      {:disabled (not (seq @history))
+      {:disabled (zero? @current-move)
        :on-click #(rf/dispatch [::events/initialize-db])}
       "Reset"]
      [:span.button.is-warning
-      {:disabled (not @winner)
-       :on-click #()}
+      {:disabled (or (not @winner) @in-replay)
+       :on-click #(rf/dispatch [::events/replay-tick 0])}
       "Replay"]]))
 
 (defn main-panel []

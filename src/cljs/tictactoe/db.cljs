@@ -1,6 +1,7 @@
 (ns tictactoe.db)
 
 (def default-db
-  {:board        (vec (repeat 9 nil))
-   :history      []
-   :next-to-move "x"})
+  {:current-move  0
+   :next-to-move  "x"
+   :board-history [(vec (repeat 9 nil))]
+   :in-replay     false})

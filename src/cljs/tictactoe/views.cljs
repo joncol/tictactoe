@@ -15,7 +15,11 @@
      (get @board index)]))
 
 (defn game-info []
-  [:p "Next to move: " @(rf/subscribe [::subs/next-to-move])])
+  (let [winner       (rf/subscribe [::subs/winner])
+        next-to-move (rf/subscribe [::subs/next-to-move])]
+    (if @winner
+      [:p "Game over (" @winner " won)"]
+      [:p "Next to move: " @next-to-move])))
 
 (defn board []
   [:div.container.section

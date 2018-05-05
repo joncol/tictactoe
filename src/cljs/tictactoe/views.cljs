@@ -6,12 +6,15 @@
 (def cell-size "50px")
 
 (defn cell [index]
-  (let [board (rf/subscribe [::subs/board])]
+  (let [board  (rf/subscribe [::subs/board])
+        winner (rf/subscribe [::subs/winner])]
     [:div.button.is-info.title.is-4
-     {:style {:width cell-size
-              :height cell-size
-              :margin "2px"}
-      :on-click #(rf/dispatch [::events/make-move index])}
+     {:disabled @winner
+      :style    {:width  cell-size
+                 :height cell-size
+                 :margin "2px"}
+      :on-click #(when-not @winner
+                   (rf/dispatch [::events/make-move index]))}
      (get @board index)]))
 
 (defn game-info []

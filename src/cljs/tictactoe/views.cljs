@@ -5,6 +5,32 @@
 
 (def cell-size "50px")
 
+(defn about-link []
+  (let [in-replay (rf/subscribe [::subs/in-replay])]
+    [:a
+     {:href "#/"
+      :disabled @in-replay
+      :on-click #(rf/dispatch [::events/show-about true])} "About"]))
+
+(defn about-screen []
+  (let [show (rf/subscribe [::subs/show-about])]
+    [:div.modal.animated.fadeIn
+     {:class (when @show "is-active")}
+     [:div.modal-background
+      {:on-click #(rf/dispatch [::events/show-about false])}
+      [:button.modal-close.is-large
+       {:aria-label "close"
+        :on-click #(rf/dispatch [::events/show-about false])}]]
+     [:div.card
+      [:header.card-header
+       [:p.card-header-title "Ditherer"]]
+      [:div.card-content
+       [:p "Made by Jonas Collberg" [:br]
+        "using ClojureScript "
+        [:i.fas.fa-coffee
+         {:aria-hidden true
+          :style {:color "#013243"}}]]]]]))
+
 (defn cell [index]
   (let [board     (rf/subscribe [::subs/board])
         winner    (rf/subscribe [::subs/winner])
@@ -44,14 +70,19 @@
       {:disabled (zero? @current-move)
        :on-click #(rf/dispatch [::events/initialize-db])}
       "Reset"]
-     [:span.button.is-warning
+     [:button.button.is-warning
       {:disabled (or (not @winner) @in-replay)
        :on-click #(rf/dispatch [::events/replay-tick 0])}
       "Replay"]]))
 
 (defn main-panel []
   [:div.container.section
-   [:div.title "Tic tac toe"]
+   [about-screen]
+   [:nav.navbar.is-light
+    [:div.navbar-menu.is-active
+     [:div.navbar-start [:h1.title "Tic tac toe"]]
+     [:div.navbar-end
+      [:div.navbar-item [about-link]]]]]
    [:div.section
     [:div.columns.is-mobile
      [:div.column.is-narrow

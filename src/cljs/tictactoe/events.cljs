@@ -8,6 +8,12 @@
     db/default-db))
 
 (rf/reg-event-db
+  ::show-about
+  (rf/path [:show-about])
+  (fn [_ [_ value]]
+    value))
+
+(rf/reg-event-db
   ::make-move
   (fn [{:keys [current-move board-history] :as db} [_ cell-index]]
     (let [board (get board-history current-move)]

@@ -2,6 +2,11 @@
   (:require [re-frame.core :as rf]))
 
 (rf/reg-sub
+  ::show-about
+  (fn [db _]
+    (:show-about db)))
+
+(rf/reg-sub
   ::next-to-move
   (fn [_ _]
     (rf/subscribe [::current-move]))

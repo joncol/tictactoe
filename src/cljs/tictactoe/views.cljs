@@ -3,27 +3,25 @@
             [tictactoe.events :as events]
             [tictactoe.subs :as subs]))
 
-(def cell-size "40px")
+(def cell-size "50px")
 
 (defn cell [index]
   (let [board (rf/subscribe [::subs/board])]
-    [:div.button.is-info
+    [:div.button.is-info.title.is-4
      {:style {:width cell-size
               :height cell-size
               :margin "2px"}
       :on-click #(rf/dispatch [::events/make-move index])}
-     (get @board index)
-     ]))
+     (get @board index)]))
 
 (defn game-info []
-  [:p "Next to move: " @(rf/subscribe [::subs/next-to-move])]
-  )
+  [:p "Next to move: " @(rf/subscribe [::subs/next-to-move])])
 
 (defn board []
-  [:div.container
+  [:div.container.section
    [:div.title "Tic tac toe"]
    [:div.section
-    [:div.columns
+    [:div.columns.is-mobile
      [:div.column.is-narrow
       (for [row (range 3)]
         ^{:key [row]}

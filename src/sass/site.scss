@@ -2,6 +2,35 @@
 // .css files. Partials (files starting with "_") can be included using @import.
 // (import path can include "_", but it is not needed).
 
+.navbar-item {
+    display: flex;
+    margin: 0px 5px;
+}
+
+.navbar,
+.navbar-menu,
+.navbar-start,
+.navbar-end {
+    align-items: stretch;
+    display: flex;
+    padding: 0;
+}
+
+.navbar-menu {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.navbar-start {
+    justify-content: flex-start;
+    margin-right: auto;
+}
+
+.navbar-end {
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
 @import "../../resources/bulma-0.7.0/bulma";
 @import "../../resources/bulma-0.7.0/sass/extensions/_all";
 @import "../../resources/public/css/animate";

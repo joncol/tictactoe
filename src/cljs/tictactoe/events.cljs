@@ -27,23 +27,17 @@
 
 (rf/reg-event-fx
   ::replay-tick
-  (fn [{:keys [db]} [_ current-move]]
+  (fn [{:keys [db]} [_ move]]
     (let [{:keys [board-history]} db]
-      (let [done   (= current-move (dec (count board-history)))
+      (let [done   (= move (dec (count board-history)))
             new-db (-> db
-                       (assoc :current-move current-move)
+                       (assoc :current-move move)
                        (assoc :in-replay (not done)))]
-        (into {}
-              (concat
-               [[:db new-db]]
-               (when (not done)
-                 [[::timer-event
-                   [(fn []
-                      (js/setTimeout
-                       #(rf/dispatch [::replay-tick
-                                      (inc current-move)]) 500))]]])))))))
-
-(rf/reg-fx
-  ::timer-event
-  (fn [[action delay]]
-    (action)))
+        (-> {:db new-db}
+            (as-> db
+                (if done
+                  db
+                  (assoc db
+                         :dispatch-later
+                         [{:ms 500
+                           :dispatch [::replay-tick (inc move)]}]))))))))
